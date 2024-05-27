@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <link rel="stylesheet" href="styles.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dino GameMy</title>
+  <style>
+    * {
+      padding: 0px;
+      margin: 0px;
+    }
+
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+
+    }
+
+    canvas {
+      max-width: 80%
+    }
+  </style>
+  <script src="index.js" defer type="module"></script>
+</head>
+
+<body>
+  <div id="myModal" class="modal">
+    <div class="modal-content">
+
+      <img src="images/doctor.jpg" alt="Modal Image" class="modal-image">
+      <p >Looks like you are still on the journey for better diabetes management. We are here to help you. Stay tuned, subscribe to get early access.</p>
+
+      <button id="TryAgainBtn" class="modal-button">Try again</button>
+    </div>
+  </div>
+
+  <canvas id="game"></canvas>
+</body>
+
+</html>
