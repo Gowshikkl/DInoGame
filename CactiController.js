@@ -47,27 +47,45 @@ export default class CactiController {
   createCactus() {
     const index = this.getRandomNumberIndex(0, this.cactiImages.length - 1);
     console.log("inddd",index)
-    if(index == 3){
+    if (index == 3) {
       const cactusImage = this.cactiImages[index];
       const x = this.canvas.width * 1.5;
-      const y = this.getRandomNumber(this.canvas.height * 0.1, this.canvas.height * 0.8); // Adjusted y coordinate
-      const cactus = new Cactus(this.ctx, x, y, 34 * this.scaleRatio, 24 * this.scaleRatio, cactusImage.image);
-
+      const y = this.getRandomNumber(this.canvas.height * 0.1, this.canvas.height * 0.8) ; // Adjusted y coordinate
+      const cactus = new Cactus(this.ctx, x, y * 1.5, 44 * this.scaleRatio, 34 * this.scaleRatio, cactusImage.image);
+  
       if (cactusImage.frames && cactusImage.frames.length > 0) {
-          // Draw each frame onto the canvas with a timed interval
-          const drawFrame = (frameIndex) => {
-              const frame = cactusImage.frames[frameIndex];
-              if (!frame) return;
-              this.ctx.drawImage(frame, 100, 100, 34 * this.scaleRatio, 24 * this.scaleRatio);
-              setTimeout(() => drawFrame((frameIndex + 1) % cactusImage.frames.length), frame.delay);
+          // Set up animation parameters
+          let currentFrameIndex = 0;
+          let lastFrameTime = Date.now();
+  
+          const updateFrame = () => {
+              const now = Date.now();
+              const frame = cactusImage.frames[currentFrameIndex];
+              
+              if (now - lastFrameTime >= frame.delay) {
+                  // Update to the next frame
+                  currentFrameIndex = (currentFrameIndex + 1) % cactusImage.frames.length;
+                  lastFrameTime = now;
+              }
+  
+              // Clear the canvas or specific area where the frame is drawn
+              this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+  
+              // Draw the current frame
+              const frameImage = cactusImage.frames[currentFrameIndex];
+              this.ctx.drawImage(frameImage, x, y, 34 * this.scaleRatio, 24 * this.scaleRatio);
+  
+              // Request the next frame
+              requestAnimationFrame(updateFrame);
           };
-
-          drawFrame(0); // Start the animation
+  
+          // Start the animation
+          requestAnimationFrame(updateFrame);
       }
-
+  
       this.cacti.push(cactus);
-
-    }else{
+  }
+  else{
       const cactusImage = this.cactiImages[index];
       console.log("cac",cactusImage.name)
       const x = this.canvas.width * 1.5;
@@ -105,7 +123,16 @@ export default class CactiController {
   }
 
   draw() {
-    this.cacti.forEach((cactus) => cactus.draw());
+    this.cacti.forEach((cactus) => 
+      this.ctx.drawImage(
+        cactus.image,
+        cactus.x,
+        cactus.y,
+        cactus.width,
+        cactus.height
+      )
+    )
+      // cactus.draw());
   }
 
  collideWith(sprite) {

@@ -61,3 +61,23 @@
     border-radius: 5px;
     transition: background 0.3s ease;
 }
+
+
+#mobileOrEmailInput {
+    margin-top: 10px;
+    padding: 10px;
+    font-size: 16px;
+    border: 2px solid #0072ff; /* Blue border */
+    border-radius: 5px;
+    transition: border-color 0.3s ease;
+}
+
+#mobileOrEmailInput:focus {
+    border-color: #00c6ff; /* Blue border color when focused */
+}
+
+@media screen and (max-width: 600px) {
+    .modal-content {
+      width: 70%; /* Adjust width for small screens */
+    }
+}
