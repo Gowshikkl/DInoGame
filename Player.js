@@ -31,26 +31,32 @@ export default class Player {
     dinoRunImage1.src = "images/run1.png";
 
     const dinoRunImage2 = new Image();
-    dinoRunImage2.src = "images/run2.png";
-
-    const dinoRunImage3 = new Image();
     dinoRunImage2.src = "images/run3.png";
 
+    const dinoRunImage3 = new Image();
+    dinoRunImage3.src = "images/run2.png";
 
+  
 
     const shieldDinoRunImage1 = new Image();
     shieldDinoRunImage1.src = "images/shield_run_1.png";
 
     const shieldDinoRunImage2 = new Image();
-    shieldDinoRunImage2.src = "images/shield_run2.png";
+    shieldDinoRunImage2.src = "images/shield_run_2.png";
+
+    
+    const shieldDinoRunImage3 = new Image();
+    shieldDinoRunImage3.src = "images/shield_run_3.png";
 
     this.dinoRunImages.push(dinoRunImage1);
     this.dinoRunImages.push(dinoRunImage2);
     this.dinoRunImages.push(dinoRunImage3);
+    // this.dinoRunImages.push(dinoRunImage4);
 
 
     this.shieldedDinoRunImages.push(shieldDinoRunImage1);
     this.shieldedDinoRunImages.push(shieldDinoRunImage2);
+    this.shieldedDinoRunImages.push(shieldDinoRunImage3);
 
     //keyboard
     window.removeEventListener("keydown", this.keydown);
@@ -94,7 +100,7 @@ export default class Player {
       if(!this.shield){
         this.image = this.standingStillImage;
       }else{
-        this.image = this.shieldedDinoRunImages[1];
+        this.image = this.shieldedDinoRunImages[0];
       }
     }
  

@@ -26,21 +26,27 @@
       max-width: 80%
     }
   </style>
-  <script src="index.js" defer type="module"></script>
+
 </head>
 
 <body>
   <div role="dialog" id="myModal" class="modal">
     <div class="modal-content">
-        <img src="images/doctor.jpg" alt="Modal Image" class="modal-image">
-        <p>Looks like you are still on the journey for better diabetes management. We are here to help you. Stay tuned, subscribe to get early access.</p>
-        <p>Please enter your mobile number or email:</p>
-        <input class="mobileOrEmailInput" type="text" id="mobileOrEmailInput" >
-        <button id="TryAgainBtn" class="modal-button">Try Again</button>
+      <img src="images/doctor.jpg" alt="Modal Image" class="modal-image">
+      <p>Looks like you are still on the journey for better diabetes management. We are here to help you. Stay tuned,
+        subscribe to get early access.</p>
+      <p id="emailTxt" >Please enter your mobile number or email:</p>
+      <input class="mobileOrEmailInput" type="email" required id="mobileOrEmailInput">
+      <button id="TryAgainBtn" class="modal-button">Try Again</button>
+      <p class="leaderboard-text" >Check the <a href="leaderboard.html" id="leaderboard-link">leaderboard</a> to see the top scores!</p>
     </div>
-</div>
+  </div>
+
+
 
   <canvas id="game"></canvas>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  <script src="index.js" defer type="module"></script>
 </body>
 
 </html>

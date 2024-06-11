@@ -3,7 +3,6 @@ import Ground from "./Ground.js";
 import CactiController from "./CactiController.js";
 import Score from "./Score.js";
 import Shieldtimer from "./ShieldTimer.js";
-
 const canvas = document.getElementById("game");
 const ctx = canvas.getContext("2d");
 
@@ -20,11 +19,13 @@ const GROUND_WIDTH = 2400;
 const GROUND_HEIGHT = 24;
 const GROUND_AND_CACTUS_SPEED = 0.5;
 const CACTI_CONFIG = [
-  { width: 90 / 1.5, height: 90 / 1.5, image: "images/sugar_angry.jpg", name: "fastfood" },
-  { width: 98 / 1.5, height: 100 / 1.5, image: "images/pills.jpg", name: 'pills', },
-  { width: 100 / 1.5, height: 100 / 1.5, image: "images/injection.png", name: "injection" },
-  { width: 200 / 1.5, height: 200 / 1.5, image: "images/sugar_bee.jpg", name: "sugarCubes" },
-  { width: 68 / 1.5, height: 70 / 1.5, image: "images/apple.jpg", name: "apple" },
+  { width: 48 / 1.5, height: 72 / 1.5, image: "images/single_sugar_cube.png", name: "single_sugar_cube" },
+  { width: 48 / 1.5, height: 63 / 1.5, image: "images/pills_bottle.png", name: 'pills_bottle', },
+  { width: 48 / 1.5, height: 100 / 1.5, image: "images/injection.png", name: "injection" },
+  { width: 95 / 1.5, height: 99 / 1.5, image: "images/injection_and_pills_bottle.png", name: "injection_and_pills_bottle" },
+  { width: 98 / 1.5, height: 74 / 1.5, image: "images/double_sugar_cube.png", name: "double_sugar_cube" },
+  { width: 64 / 1.5, height: 98 / 1.5, image: "images/double_sugar_cube_stack.png", name: "double_sugar_cube_stack" },
+  { width: 48 / 1.5, height: 47 / 1.5, image: "images/apple.png", name: "apple" },
 ];
 
 //Game Objects
@@ -43,9 +44,16 @@ let hasAddedEventListenersForRestart = false;
 let waitingToStart = true;
 
 const birdSpriteSheet = new Image();
+let email =  "";
+
+email = localStorage.getItem("email")
+
 birdSpriteSheet.src = 'images/fastfood.png'; // Update with your bird sprite sheet path
 const modal = document.getElementById("myModal");
 const tryAgainBtn = document.getElementById("TryAgainBtn");
+const emailInput = document.getElementById("mobileOrEmailInput");
+const emailTxt = document.getElementById("emailTxt");
+
 
 function createSprites() {
   const playerWidthInGame = PLAYER_WIDTH * scaleRatio;
@@ -55,6 +63,7 @@ function createSprites() {
 
   const groundWidthInGame = GROUND_WIDTH * scaleRatio;
   const groundHeightInGame = GROUND_HEIGHT * scaleRatio;
+
 
   player = new Player(
     ctx,
@@ -201,6 +210,7 @@ function gameLoop(currentTime) {
   }
 
   if (!gameOver && (cactiController.collideWith(player))) {
+
     gameOver = true;
     setupGameReset();
     score.setHighScore();
@@ -228,56 +238,92 @@ function gameLoop(currentTime) {
   requestAnimationFrame(gameLoop);
 }
 
+
+// console.log("encc",$API_BASE_URL)
+
+
 tryAgainBtn.onclick = function () {
-  closeModal();
-  reset();
+  console.log("score", Math.round( score.score))
+
+  if(email == null){
+    if (validateEmail(emailInput.value)) {
+      addUserServices()
+    }else{
+      alert("Please enter a valid email")
+    }
+  }else{
+    updateScoreServices();
+  }
+
+}
+
+function addUserServices (){
+  axios.post("https://api.type1and2.com/" + "api/user", {
+    "email": emailInput?.value,
+    "highScore": Math.round(score?.score)
+  }).then((response) => {
+    if(response?.data?.status == 200){
+      console.log("ress",response?.data)
+      localStorage.setItem("email",emailInput?.value);
+      closeModal();
+      reset();
+    }else{
+      console.log('errr',response?.data)
+      closeModal();
+      reset();
+    }
+  }).catch((error)=>{
+    console.log("error",error);
+    closeModal();
+    reset();
+  })
+
+}
+
+function updateScoreServices  () {
+  axios.post("https://api.type1and2.com/" + "api/user/score", {
+    "email": email,
+    "highScore": Math.round(score?.score)
+  }).then((response) => {
+    if(response?.data?.status == 200){
+      console.log("ress",response?.data)
+      closeModal();
+      reset();
+    }else{
+      console.log('errr',response?.data)
+      closeModal();
+      reset();
+    }
+  }).catch((error)=>{
+    console.log("error",error);
+    closeModal();
+    reset();
+  })
+
 }
 
 function closeModal() {
   modal.style.display = "none";
-  // document.removeEventListener("keydown", blockEventsIfOutsideModal, true);
-  // document.removeEventListener("keypress", blockEventsIfOutsideModal, true);
-  // document.removeEventListener("keyup", blockEventsIfOutsideModal, true);
-  // document.removeEventListener("touchstart", blockEventsIfOutsideModal, true);
-  // document.removeEventListener("touchmove", blockEventsIfOutsideModal, true);
-  // document.removeEventListener("touchend", blockEventsIfOutsideModal, true);
 
-  // window.addEventListener("keyup", reset, { once: true });
-  // window.addEventListener("touchstart", reset, { once: true });
 }
 
 function openModal() {
-  modal.style.display = "block";
-  // document.addEventListener("keydown", blockEventsIfOutsideModal, true);
-  // document.addEventListener("keypress", blockEventsIfOutsideModal, true);
-  // document.addEventListener("keyup", blockEventsIfOutsideModal, true);
-  // document.addEventListener("touchstart", blockEventsIfOutsideModal, true);
-  // document.addEventListener("touchmove", blockEventsIfOutsideModal, true);
-  // document.addEventListener("touchend", blockEventsIfOutsideModal, true);
-
-  // window.removeEventListener("keyup", reset, { once: true });
-  // window.removeEventListener("touchstart", reset, { once: true });
-
-}
-
-
-function blockEventsIfOutsideModal(event) {
-  if (!modal.contains(event.target)) {
-    event.stopPropagation();
-    event.preventDefault();
+  email = localStorage.getItem("email")
+  if(email != null){
+    emailTxt.style.display = 'none'
+    emailInput.style.display ='none';
   }
+  modal.style.display = "block";
+  
+
 }
 
 
-function blockKeyboardEvents(event) {
-  event.stopPropagation();
-  event.preventDefault();
+function validateEmail(email) {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(email);
 }
 
-function blockTouchEvents(event) {
-  event.stopPropagation();
-  event.preventDefault();
-}
 requestAnimationFrame(gameLoop);
 
 window.addEventListener("keyup", reset, { once: true });

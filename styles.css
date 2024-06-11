@@ -75,6 +75,10 @@
 #mobileOrEmailInput:focus {
     border-color: #00c6ff; /* Blue border color when focused */
 }
+.modal-content .leaderboard-text {
+    color: grey;
+    font-size: 14px; /* Adjust the font size as needed */
+  }
 
 @media screen and (max-width: 600px) {
     .modal-content {

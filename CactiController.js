@@ -6,6 +6,10 @@ export default class CactiController {
 
   nextCactusInterval = null;
   cacti = [];
+  
+  APPLE_PROBABILITY = 0.00005; // Probability of generating an apple (adjust as needed)
+  APPLE_COOLDOWN = 10000; // Cooldown period for generating apples (in milliseconds)
+  lastAppleGeneratedTime = null; // Track the timestamp when the last apple was generated
 
   constructor(ctx, cactiImages, scaleRatio, speed,player) {
     this.ctx = ctx;
@@ -36,7 +40,7 @@ export default class CactiController {
     console.log('probabilittt',probability )
     if (probability < 0.00005) {
         // Increase the probability of generating 4 by reducing the range
-        return 4;
+        return 6;
     } else {
         // Generate a random number within the specified range
         return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -46,12 +50,13 @@ export default class CactiController {
 
   createCactus() {
     const index = this.getRandomNumberIndex(0, this.cactiImages.length - 1);
-    console.log("inddd",index)
-    if (index == 3) {
+    console.log("inddd",this.cactiImages[index])
+    if (index == 6 && !this.player.shield) {
       const cactusImage = this.cactiImages[index];
       const x = this.canvas.width * 1.5;
       const y = this.getRandomNumber(this.canvas.height * 0.1, this.canvas.height * 0.8) ; // Adjusted y coordinate
-      const cactus = new Cactus(this.ctx, x, y * 1.5, 44 * this.scaleRatio, 34 * this.scaleRatio, cactusImage.image);
+      console.log("cac apple",cactusImage.name)
+      const cactus = new Cactus(this.ctx, x, y, 40 * this.scaleRatio, 40 * this.scaleRatio, cactusImage.image, cactusImage?.names );
   
       if (cactusImage.frames && cactusImage.frames.length > 0) {
           // Set up animation parameters
@@ -82,6 +87,7 @@ export default class CactiController {
           // Start the animation
           requestAnimationFrame(updateFrame);
       }
+      cactus.names = cactusImage?.name
   
       this.cacti.push(cactus);
   }
@@ -142,9 +148,10 @@ export default class CactiController {
           console.log("playerr",this.player.activateShield)
           return false
         }else if(cactus.name !== "apple" && !this.player.shield && cactus.collideWith(sprite)){
-          console.log('Collision with cactus:', cactus);
+          console.log('Collision with cactus:', cactus.names);
           return cactus; // Return the cactus object when collision occurs
         }else if(this?.player?.shield && cactus.collideWith(sprite) ){
+          console.log('heloooo')
          // this.player.deactivateShield();
           return false;
         }
